@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "kernelspec": {
+      "name": "python",
+      "display_name": "Python (Pyodide)",
+      "language": "python"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "python",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8"
+    }
+  },
+  "nbformat_minor": 4,
+  "nbformat": 4,
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": "# Importing necessary libraries\nimport sqlite3\n\n# Create a SQLite connection\nconn = sqlite3.connect('weather.db')\n\n# Create a cursor object\ncur = conn.cursor()\n\n# Create the Weather table if not exists\ncur.execute('''CREATE TABLE IF NOT EXISTS Weather (\n               id INTEGER PRIMARY KEY,\n               recordDate DATE,\n               temperature INTEGER\n               )''')\n\n# Insert data into the Weather table\ndata = [\n    (1, '2015-01-01', 10),\n    (2, '2015-01-02', 25),\n    (3, '2015-01-03', 20),\n    (4, '2015-01-04', 30)\n]\n\ncur.executemany('INSERT INTO Weather (id, recordDate, temperature) VALUES (?, ?, ?)', data)\n\n# Commit the transaction\nconn.commit()\n\n# Write the SQL query\nsql_query = '''\nSELECT w.id\nFROM Weather w\nJOIN Weather w_prev ON DATE(w_prev.recordDate, '+1 day') = w.recordDate\nWHERE w.temperature > w_prev.temperature\n'''\n\n# Execute the SQL query\ncur.execute(sql_query)\n\n# Fetch and display the result\nresult = cur.fetchall()\nfor row in result:\n    print(row[0])\n\n# Close the cursor and connection\ncur.close()\nconn.close()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "name": "stdout",
+          "text": "2\n4\n",
+          "output_type": "stream"
+        }
+      ],
+      "execution_count": 7
+    },
+    {
+      "cell_type": "code",
+      "source": "",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": "",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    }
+  ]
+}
